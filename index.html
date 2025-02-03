@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width,initial-scale=1">
+    <link rel="shortcut icon" href="https://live.drmlive.in/sports/fancode.png" />
+    <title>Fancode Live Matches</title>
+    <style>
+        body {
+            font-family: 'Helvetica Neue', Arial, sans-serif';
+            margin: 0;
+            padding: 20px;
+            background-color: #000;
+            color: #fff;
+        }
+        .file-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 20px;
+            justify-content: center;
+            padding: 10px;
+        }
+        .match-item {
+            margin: 10px;
+            text-align: center;
+            border-radius: 8px;
+            overflow: hidden;
+            transition: transform .3s ease, box-shadow .3s ease;
+            background-color: #1a1a1a;
+            padding: 10px;
+            width: calc(14.28% - 20px); /* Adjusted for desktop screens */
+            box-sizing: border-box;
+            cursor: pointer; /* Add cursor pointer to indicate clickable */
+        }
+        .match-item img {
+            max-width: 100%;
+            height: auto;
+            display: block;
+            margin: 0 auto 10px auto;
+        }
+        .match-item a {
+            text-decoration: none;
+            color: #00bfff;
+            font-weight: 700;
+            display: block;
+            margin-top: 5px;
+            transition: color .3s ease;
+        }
+        .match-item:hover {
+            transform: scale(1.05);
+            box-shadow: 0 0 10px rgba(255, 255, 255, .3);
+        }
+        .match-item a:hover {
+            color: #fff;
+        }
+        h1 {
+            text-align: center;
+            color: #00bfff;
+            margin-bottom: 40px;
+        }
+        .telegram-toggle {
+            position: fixed;
+            top: 10px;
+            right: 10px;
+            background-color: #0088cc;
+            color: white;
+            padding: 10px 15px;
+            border-radius: 50px;
+            text-decoration: none;
+            font-weight: bold;
+        }
+        .telegram-toggle:hover {
+            background-color: #006699;
+        }
+        .status-LIVE {
+            color: red;
+            animation: glow 1s infinite alternate;
+        }
+        @keyframes glow {
+            from {
+                text-shadow: 0 0 10px red;
+            }
+            to {
+                text-shadow: 0 0 20px red;
+            }
+        }
+        .status-UPCOMING {
+            color: #777;
+            opacity: 0.6;
+        }
+        @media (max-width: 1024px) {
+            .match-item {
+                width: calc(25% - 20px); /* Adjusted for tablets */
+            }
+        }
+        @media (max-width: 768px) {
+            .match-item {
+                width: calc(33.333% - 20px); /* Adjusted for small tablets */
+            }
+        }
+        @media (max-width: 480px) {
+            .match-item {
+                width: calc(50% - 20px); /* Adjusted for mobile devices */
+            }
+        }
+    </style>
+</head>
+<body>
+    <a href="https://t.me/+33IHK7BHR14xY2I1" class="telegram-toggle">Join Telegram</a>
+    <h1>Fancode Live Matches</h1>
+    <div class="file-container" id="matches"></div>
+
+    <script>
+        const apiURL = 'https://api-fancode.drmLIVE.au';
+
+        fetch(apiURL)
+            .then(response => response.json())
+            .then(data => {
+                // Sort matches so that LIVE matches come first
+                data.matches.sort((a, b) => {
+                    if (a.status === 'LIVE' && b.status !== 'LIVE') {
+                        return -1;
+                    }
+                    if (a.status !== 'LIVE' && b.status === 'LIVE') {
+                        return 1;
+                    }
+                    return 0;
+                });
+
+                const matchesContainer = document.getElementById('matches');
+                data.matches.forEach(match => {
+                    const matchItem = document.createElement('div');
+                    matchItem.className = 'match-item';
+                    const statusText = match.status === 'LIVE' ? 'LIVE' : 'UPCOMING';
+                    const statusClass = match.status === 'LIVE' ? 'status-LIVE' : 'status-UPCOMING';
+                    const startTimeText = match.status === 'UPCOMING' ? `<p>${match.startTime}</p>` : '';
+                    matchItem.innerHTML = `
+                        <img src="${match.src}" alt="${match.event_name}">
+                        <h3>${match.event_name}</h3>
+                        <p>${match.match_name}</p>
+                        <p class="${statusClass}">${statusText}</p>
+                        ${startTimeText}
+                    `;
+                    if (match.status === 'LIVE' && match.adfree_url) {
+                        matchItem.addEventListener('click', () => {
+                            window.location.href = `play.php?id=${match.match_id}`;
+                        });
+                    } else if (match.status === 'UPCOMING') {
+                        matchItem.addEventListener('click', () => {
+                            alert('This match is UPCOMING.');
+                        });
+                    }
+                    matchesContainer.appendChild(matchItem);
+                });
+            })
+            .catch(error => {
+                console.error('Error fetching data:', error);
+            });
+    </script>
+</body>
+</html>
