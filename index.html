@@ -2,16 +2,47 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1">
-    <link rel="shortcut icon" href="https://live.drmlive.in/sports/fancode.png" />
-    <title>Fancode Live Matches</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1,user-scalable=no">
+    <title>JioTV BY DRMLIVE</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Gloock&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Fjalla+One&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="https://live.drmlive.in/jio.jpg" type="image/x-icon">
+    <link rel="icon" href="https://live.drmlive.in/jio.jpg" type="image/x-icon">
+    <link rel="stylesheet" href="https://ipl-2023-schedule.pages.dev/jtv.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.1/css/all.min.css">
     <style>
+        @import url(https://fonts.googleapis.com/css2?family=Montserrat&display=swap);
         body {
-            font-family: 'Helvetica Neue', Arial, sans-serif';
+            font-family: 'Helvetica Neue', Arial, sans-serif;
             margin: 0;
             padding: 20px;
-            background-color: #000;
-            color: #fff;
+            background-color: #f1f1f1;
+            color: #333;
+        }
+        .header-container {
+            display: flex;
+            align-items: center;
+            font-family: Gloock, serif;
+            font-weight: 700;
+            font-size: 28px;
+            color: #333;
+            text-align: left;
+            text-transform: uppercase;
+            letter-spacing: 4px;
+            margin-bottom: 20px;
+            margin-top: 20px;
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, .3);
+            background-color: #f8f8f8;
+            padding: 7px 20px;
+            border-radius: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, .2);
+        }
+        .toggle-wrapper {
+            margin-left: auto;
+            display: flex;
+            align-items: center;
         }
         .file-container {
             display: flex;
@@ -20,25 +51,23 @@
             justify-content: center;
             padding: 10px;
         }
-        .match-item {
+        .directory-item, .file-item {
             margin: 10px;
             text-align: center;
             border-radius: 8px;
             overflow: hidden;
             transition: transform .3s ease, box-shadow .3s ease;
-            background-color: #1a1a1a;
+            background-color: #fff;
             padding: 10px;
-            width: calc(14.28% - 20px); /* Adjusted for desktop screens */
-            box-sizing: border-box;
-            cursor: pointer; /* Add cursor pointer to indicate clickable */
         }
-        .match-item img {
-            max-width: 100%;
+        .directory-item img, .file-item img {
+            max-width: 150px;
             height: auto;
             display: block;
-            margin: 0 auto 10px auto;
+            margin: 0 auto;
+            transition: transform .3s ease;
         }
-        .match-item a {
+        .directory-item a, .file-item a {
             text-decoration: none;
             color: #00bfff;
             font-weight: 700;
@@ -46,116 +75,83 @@
             margin-top: 5px;
             transition: color .3s ease;
         }
-        .match-item:hover {
+        .directory-item:hover, .file-item:hover {
             transform: scale(1.05);
-            box-shadow: 0 0 10px rgba(255, 255, 255, .3);
+            box-shadow: 0 0 10px rgba(0, 0, 0, .3);
         }
-        .match-item a:hover {
-            color: #fff;
+        .directory-item img:hover, .file-item img:hover {
+            transform: scale(1.1);
+        }
+        .directory-item a:hover, .file-item a:hover {
+            color: #007bff;
         }
         h1 {
             text-align: center;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        .group-filter {
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        .group-filter select, .search-bar input {
+            padding: 10px;
+            font-size: 16px;
+            border-radius: 5px;
+            border: 1px solid #ccc;
+            background-color: #fff;
+            color: #333;
+        }
+        .search-bar {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+        .dark-mode {
+            background-color: #000;
+            color: #fff;
+        }
+        .dark-mode .header-container {
+            background-color: #111;
+            color: #fff;
+        }
+        .dark-mode .directory-item {
+            background-color: #222;
+            color: #fff;
+        }
+        .dark-mode .directory-item a {
             color: #00bfff;
-            margin-bottom: 40px;
         }
-        .telegram-toggle {
-            position: fixed;
-            top: 10px;
-            right: 10px;
-            background-color: #0088cc;
-            color: white;
-            padding: 10px 15px;
-            border-radius: 50px;
-            text-decoration: none;
-            font-weight: bold;
+        .dark-mode .directory-item a:hover {
+            color: #fff;
         }
-        .telegram-toggle:hover {
-            background-color: #006699;
-        }
-        .status-LIVE {
-            color: red;
-            animation: glow 1s infinite alternate;
-        }
-        @keyframes glow {
-            from {
-                text-shadow: 0 0 10px red;
-            }
-            to {
-                text-shadow: 0 0 20px red;
-            }
-        }
-        .status-UPCOMING {
-            color: #777;
-            opacity: 0.6;
-        }
-        @media (max-width: 1024px) {
-            .match-item {
-                width: calc(25% - 20px); /* Adjusted for tablets */
-            }
-        }
-        @media (max-width: 768px) {
-            .match-item {
-                width: calc(33.333% - 20px); /* Adjusted for small tablets */
-            }
-        }
-        @media (max-width: 480px) {
-            .match-item {
-                width: calc(50% - 20px); /* Adjusted for mobile devices */
-            }
+        .dark-mode .group-filter select, .dark-mode .search-bar input {
+            background-color: #333;
+            color: #fff;
+            border: 1px solid #555;
         }
     </style>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 </head>
 <body>
-    <a href="https://t.me/+rQTz5VL8CRpjNTZl" class="telegram-toggle">Join Telegram</a>
-    <h1>Fancode Live Matches</h1>
-    <div class="file-container" id="matches"></div>
-
-    <script>
-        const apiURL = 'https://api-fancode.drmLIVE.au';
-
-        fetch(apiURL)
-            .then(response => response.json())
-            .then(data => {
-                // Sort matches so that LIVE matches come first
-                data.matches.sort((a, b) => {
-                    if (a.status === 'LIVE' && b.status !== 'LIVE') {
-                        return -1;
-                    }
-                    if (a.status !== 'LIVE' && b.status === 'LIVE') {
-                        return 1;
-                    }
-                    return 0;
-                });
-
-                const matchesContainer = document.getElementById('matches');
-                data.matches.forEach(match => {
-                    const matchItem = document.createElement('div');
-                    matchItem.className = 'match-item';
-                    const statusText = match.status === 'LIVE' ? 'LIVE' : 'UPCOMING';
-                    const statusClass = match.status === 'LIVE' ? 'status-LIVE' : 'status-UPCOMING';
-                    const startTimeText = match.status === 'UPCOMING' ? `<p>${match.startTime}</p>` : '';
-                    matchItem.innerHTML = `
-                        <img src="${match.src}" alt="${match.event_name}">
-                        <h3>${match.event_name}</h3>
-                        <p>${match.match_name}</p>
-                        <p class="${statusClass}">${statusText}</p>
-                        ${startTimeText}
-                    `;
-                    if (match.status === 'LIVE' && match.adfree_url) {
-                        matchItem.addEventListener('click', () => {
-                            window.location.href = `play.php?id=${match.match_id}`;
-                        });
-                    } else if (match.status === 'UPCOMING') {
-                        matchItem.addEventListener('click', () => {
-                            alert('This match is UPCOMING.');
-                        });
-                    }
-                    matchesContainer.appendChild(matchItem);
-                });
-            })
-            .catch(error => {
-                console.error('Error fetching data:', error);
-            });
-    </script>
-</body>
-</html>
+    <div class="header-container">
+        <h1 id="title">JioTV BY DRMLIVE</h1>
+        <div class="toggle-wrapper">
+            <input type="checkbox" class="checkbox" id="checkbox">
+            <label for="checkbox" class="checkbox-label">
+                <i class="fas fa-moon"></i>
+                <i class="fas fa-sun"></i>
+                <span class="ball"></span>
+            </label>
+        </div>
+    </div>
+    <div class="group-filter">
+        <label for="group-select">Select Channel Group:</label>
+        <select id="group-select" onchange="filterChannels()">
+            <option value="all">All</option>
+            <option value='Business News'>Business News</option><option value='Entertainment'>Entertainment</option><option value='Infotainment'>Infotainment</option><option value='Movies'>Movies</option><option value='Sports'>Sports</option><option value='Lifestyle'>Lifestyle</option><option value='Kids'>Kids</option><option value='News'>News</option><option value='Devotional'>Devotional</option><option value='Music'>Music</option><option value='Educational'>Educational</option><option value='Shopping'>Shopping</option><option value='Religious'>Religious</option>        </select>
+    </div>
+    <div class="search-bar">
+        <input type="text" id="search-input" placeholder="Search Channels" onkeyup="searchChannels()">
+    </div>
+    <div class="file-container" id="channels-container">
+        <div class='directory-item' data-group='Business News' data-name='CNBC Tv18 Prime HD'><a href='play.php?id=143'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/CNBC_Tv18_Prime_HD.png' alt='CNBC Tv18 Prime HD' loading='lazy'></a><a href='play.php?id=143'>CNBC Tv18 Prime HD</a></div><div class='directory-item' data-group='Entertainment' data-name='Colors HD'><a href='play.php?id=144'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Colors_HD.png' alt='Colors HD' loading='lazy'></a><a href='play.php?id=144'>Colors HD</a></div><div class='directory-item' data-group='Infotainment' data-name='History TV18 HD'><a href='play.php?id=146'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/History_HD.png' alt='History TV18 HD' loading='lazy'></a><a href='play.php?id=146'>History TV18 HD</a></div><div class='directory-item' data-group='Movies' data-name='Movies Now HD'><a href='play.php?id=151'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Movies_Now_HD.png' alt='Movies Now HD' loading='lazy'></a><a href='play.php?id=151'>Movies Now HD</a></div><div class='directory-item' data-group='Entertainment' data-name='Sony SAB'><a href='play.php?id=154'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Sony_SAB.png' alt='Sony SAB' loading='lazy'></a><a href='play.php?id=154'>Sony SAB</a></div><div class='directory-item' data-group='Sports' data-name='Sony Ten 5 HD'><a href='play.php?id=155'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Six_HD.png' alt='Sony Ten 5 HD' loading='lazy'></a><a href='play.php?id=155'>Sony Ten 5 HD</a></div><div class='directory-item' data-group='Sports' data-name='Sony Ten 1 HD'><a href='play.php?id=162'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Ten_HD.png' alt='Sony Ten 1 HD' loading='lazy'></a><a href='play.php?id=162'>Sony Ten 1 HD</a></div><div class='directory-item' data-group='Lifestyle' data-name='Travelxp HD'><a href='play.php?id=164'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Travel_XP_HD.png' alt='Travelxp HD' loading='lazy'></a><a href='play.php?id=164'>Travelxp HD</a></div><div class='directory-item' data-group='Kids' data-name='Cartoon Network Telugu'><a href='play.php?id=166'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Cartoon_Network_Telugu.png' alt='Cartoon Network Telugu' loading='lazy'></a><a href='play.php?id=166'>Cartoon Network Telugu</a></div><div class='directory-item' data-group='News' data-name='Aaj Tak'><a href='play.php?id=173'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Aaj_Tak.png' alt='Aaj Tak' loading='lazy'></a><a href='play.php?id=173'>Aaj Tak</a></div><div class='directory-item' data-group='Devotional' data-name='Aastha'><a href='play.php?id=175'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Aastha.png' alt='Aastha' loading='lazy'></a><a href='play.php?id=175'>Aastha</a></div><div class='directory-item' data-group='News' data-name='ABP News India'><a href='play.php?id=177'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/ABP_News_India.png' alt='ABP News India' loading='lazy'></a><a href='play.php?id=177'>ABP News India</a></div><div class='directory-item' data-group='News' data-name='Asianet News'><a href='play.php?id=180'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Asianet_News.png' alt='Asianet News' loading='lazy'></a><a href='play.php?id=180'>Asianet News</a></div><div class='directory-item' data-group='Movies' data-name='B4U Movies'><a href='play.php?id=182'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/B4U_Movies.png' alt='B4U Movies' loading='lazy'></a><a href='play.php?id=182'>B4U Movies</a></div><div class='directory-item' data-group='Music' data-name='B4U Music'><a href='play.php?id=183'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/B4U_Music.png' alt='B4U Music' loading='lazy'></a><a href='play.php?id=183'>B4U Music</a></div><div class='directory-item' data-group='Business News' data-name='CNBC Awaaz'><a href='play.php?id=190'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/CNBC_Awaaz.png' alt='CNBC Awaaz' loading='lazy'></a><a href='play.php?id=190'>CNBC Awaaz</a></div><div class='directory-item' data-group='News' data-name='CNN'><a href='play.php?id=193'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/CNN.png' alt='CNN' loading='lazy'></a><a href='play.php?id=193'>CNN</a></div><div class='directory-item' data-group='Entertainment' data-name='Colors Gujarati'><a href='play.php?id=196'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Colors_Gujarati.png' alt='Colors Gujarati' loading='lazy'></a><a href='play.php?id=196'>Colors Gujarati</a></div><div class='directory-item' data-group='Entertainment' data-name='Colors Oriya'><a href='play.php?id=198'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Colors_Oriya.png' alt='Colors Oriya' loading='lazy'></a><a href='play.php?id=198'>Colors Oriya</a></div><div class='directory-item' data-group='Entertainment' data-name='DD National'><a href='play.php?id=202'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/DD_National.png' alt='DD National' loading='lazy'></a><a href='play.php?id=202'>DD National</a></div><div class='directory-item' data-group='News' data-name='DD News'><a href='play.php?id=203'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/DD_News.png' alt='DD News' loading='lazy'></a><a href='play.php?id=203'>DD News</a></div><div class='directory-item' data-group='Sports' data-name='DD Sports'><a href='play.php?id=204'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/DD_Sports.png' alt='DD Sports' loading='lazy'></a><a href='play.php?id=204'>DD Sports</a></div><div class='directory-item' data-group='Business News' data-name='ET Now'><a href='play.php?id=212'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/ET_Now.png' alt='ET Now' loading='lazy'></a><a href='play.php?id=212'>ET Now</a></div><div class='directory-item' data-group='News' data-name='News 18 India'><a href='play.php?id=231'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/IBN_7.png' alt='News 18 India' loading='lazy'></a><a href='play.php?id=231'>News 18 India</a></div><div class='directory-item' data-group='News' data-name='News18 Lokmat'><a href='play.php?id=232'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/IBN_Lokmat.png' alt='News18 Lokmat' loading='lazy'></a><a href='play.php?id=232'>News18 Lokmat</a></div><div class='directory-item' data-group='News' data-name='India TV'><a href='play.php?id=235'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/India_TV.png' alt='India TV' loading='lazy'></a><a href='play.php?id=235'>India TV</a></div><div class='directory-item' data-group='Infotainment' data-name='Discovery'><a href='play.php?id=242'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Discovery_Channel_English.png' alt='Discovery' loading='lazy'></a><a href='play.php?id=242'>Discovery</a></div><div class='directory-item' data-group='Music' data-name='MTV'><a href='play.php?id=248'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/MTV.png' alt='MTV' loading='lazy'></a><a href='play.php?id=248'>MTV</a></div><div class='directory-item' data-group='Music' data-name='Music India'><a href='play.php?id=250'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Music_India.png' alt='Music India' loading='lazy'></a><a href='play.php?id=250'>Music India</a></div><div class='directory-item' data-group='Movies' data-name='ETV Cinema'><a href='play.php?id=252'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/ETV_Cinema.png' alt='ETV Cinema' loading='lazy'></a><a href='play.php?id=252'>ETV Cinema</a></div><div class='directory-item' data-group='News' data-name='NDTV 24x7'><a href='play.php?id=255'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/NDTV_24x7.png' alt='NDTV 24x7' loading='lazy'></a><a href='play.php?id=255'>NDTV 24x7</a></div><div class='directory-item' data-group='News' data-name='NDTV India'><a href='play.php?id=258'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/NDTV_India.png' alt='NDTV India' loading='lazy'></a><a href='play.php?id=258'>NDTV India</a></div><div class='directory-item' data-group='Business News' data-name='NDTV Profit'><a href='play.php?id=259'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/NDTV_Profit.png' alt='NDTV Profit' loading='lazy'></a><a href='play.php?id=259'>NDTV Profit</a></div><div class='directory-item' data-group='Entertainment' data-name='Rishtey'><a href='play.php?id=279'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Rishtey.png' alt='Rishtey' loading='lazy'></a><a href='play.php?id=279'>Rishtey</a></div><div class='directory-item' data-group='Infotainment' data-name='Animal Planet HD World'><a href='play.php?id=286'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Animal_Planet_HD.png' alt='Animal Planet HD World' loading='lazy'></a><a href='play.php?id=286'>Animal Planet HD World</a></div><div class='directory-item' data-group='Devotional' data-name='Sanskar'><a href='play.php?id=288'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Sanskar.png' alt='Sanskar' loading='lazy'></a><a href='play.php?id=288'>Sanskar</a></div><div class='directory-item' data-group='Movies' data-name='Sony Max SD'><a href='play.php?id=289'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Sony_Max_SD.png' alt='Sony Max SD' loading='lazy'></a><a href='play.php?id=289'>Sony Max SD</a></div><div class='directory-item' data-group='Kids' data-name='sonic Tamil'><a href='play.php?id=290'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/sonic_Tamil.png' alt='sonic Tamil' loading='lazy'></a><a href='play.php?id=290'>sonic Tamil</a></div><div class='directory-item' data-group='Entertainment' data-name='SET HD'><a href='play.php?id=291'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Sony_HD.png' alt='SET HD' loading='lazy'></a><a href='play.php?id=291'>SET HD</a></div><div class='directory-item' data-group='News' data-name='Times NOW'><a href='play.php?id=383'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Times_NOW.png' alt='Times NOW' loading='lazy'></a><a href='play.php?id=383'>Times NOW</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 01'><a href='play.php?id=400'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_1.png' alt='PM e Vidya 01' loading='lazy'></a><a href='play.php?id=400'>PM e Vidya 01</a></div><div class='directory-item' data-group='Educational' data-name='Swayam Prabha 19'><a href='play.php?id=401'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Swayam_Prabha_19.png' alt='Swayam Prabha 19' loading='lazy'></a><a href='play.php?id=401'>Swayam Prabha 19</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 02'><a href='play.php?id=402'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_2.png' alt='PM e Vidya 02' loading='lazy'></a><a href='play.php?id=402'>PM e Vidya 02</a></div><div class='directory-item' data-group='Educational' data-name='Swayam Prabha 20'><a href='play.php?id=403'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Swayam_Prabha_20.png' alt='Swayam Prabha 20' loading='lazy'></a><a href='play.php?id=403'>Swayam Prabha 20</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 07'><a href='play.php?id=404'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_7.png' alt='PM e Vidya 07' loading='lazy'></a><a href='play.php?id=404'>PM e Vidya 07</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 03'><a href='play.php?id=405'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_3.png' alt='PM e Vidya 03' loading='lazy'></a><a href='play.php?id=405'>PM e Vidya 03</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 04'><a href='play.php?id=406'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_4.png' alt='PM e Vidya 04' loading='lazy'></a><a href='play.php?id=406'>PM e Vidya 04</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 05'><a href='play.php?id=407'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_5.png' alt='PM e Vidya 05' loading='lazy'></a><a href='play.php?id=407'>PM e Vidya 05</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 06'><a href='play.php?id=408'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_6.png' alt='PM e Vidya 06' loading='lazy'></a><a href='play.php?id=408'>PM e Vidya 06</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 08'><a href='play.php?id=409'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/_evidya_8.png' alt='PM e Vidya 08' loading='lazy'></a><a href='play.php?id=409'>PM e Vidya 08</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 09'><a href='play.php?id=410'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_9.png' alt='PM e Vidya 09' loading='lazy'></a><a href='play.php?id=410'>PM e Vidya 09</a></div><div class='directory-item' data-group='Educational' data-name='PM e Vidya 10'><a href='play.php?id=411'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/evidya_10.png' alt='PM e Vidya 10' loading='lazy'></a><a href='play.php?id=411'>PM e Vidya 10</a></div><div class='directory-item' data-group='News' data-name='Wion'><a href='play.php?id=412'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/Wion.png' alt='Wion' loading='lazy'></a><a href='play.php?id=412'>Wion</a></div><div class='directory-item' data-group='Movies' data-name='J Movies'><a href='play.php?id=417'><img src='https://jiotvimages.cdn.jio.com/dare_images/images/J_Movies.png' alt='J M
